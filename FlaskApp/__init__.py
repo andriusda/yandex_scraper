@@ -6,7 +6,12 @@ import redis
 from . import config
 
 
-app = Flask(__name__)
+class App(Flask):
+    def __init__(self, import_name, *args, **kwargs):
+        self.db = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB)
+        super(App, self).__init__(import_name, *args, **kwargs)
+
+app = App(__name__)
 app.config['SERVER_NAME'] = config.SERVER_NAME
 
 
@@ -48,9 +53,8 @@ def gzipped(f):
 @app.route('/task')
 @gzipped
 def task():
-    db = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=config.REDIS_DB)
     if request.args.get('id'):
-        data = db.get(request.args.get('id'))
+        data = app.db.get(request.args.get('id'))
         if data:
             return data
     return '<h3>404 Not Found</h3>'
