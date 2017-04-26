@@ -23,13 +23,11 @@ class YandexSpider(scrapy.Spider):
 
     def start_requests(self):
         for url in self.start_urls:
-            page = 0
-            while page < self.pages:
+            for page in range(self.pages):
                 yield self.make_requests_from_url(url % urllib.parse.urlencode({
                     'text': self.search_phrase,
                     'p': page
                 }))
-                page += 1
 
     def parse(self, response: scrapy.http.Response) -> None:
         ensure_response_200(response)
