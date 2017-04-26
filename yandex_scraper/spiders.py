@@ -19,7 +19,6 @@ class YandexSpider(scrapy.Spider):
         self.search_phrase = search_phrase
         self.pages = pages
         self.callback_url = callback_url
-        self.task_id = 0
 
     def start_requests(self):
         for url in self.start_urls:

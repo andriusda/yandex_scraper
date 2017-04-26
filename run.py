@@ -57,7 +57,7 @@ def main(argv):
     tasks = []
 
     def get_task_id(**kwargs):
-        if kwargs.get('spider'):
+        if kwargs.get('spider') and hasattr(kwargs['spider'], 'task_id'):
             tasks.append(kwargs['spider'].task_id)
 
     crawler.signals.connect(get_task_id, signal=spider_closed)
