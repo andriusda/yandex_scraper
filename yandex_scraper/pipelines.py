@@ -5,6 +5,9 @@ import redis
 from FlaskApp import config
 
 
+INITIAL_DB_STRING_LENGTH = 4
+
+
 def format_callback_url(task_id):
     return '{}/task?id={}'.format(config.SERVER_NAME, task_id)
 
@@ -19,7 +22,7 @@ class YandexScraperPipeline(object):
         self.redis.set(self.key, '<ol>')
 
     def close_spider(self, spider):
-        if len(self.redis.get(self.key)) < 1:
+        if len(self.redis.get(self.key)) == INITIAL_DB_STRING_LENGTH:
             self.redis.delete(self.key)
             return
         self.redis.append(self.key, '</ol>')
